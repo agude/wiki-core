@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# status - Summary stats for the wiki.
+#
+# Usage:
+#   status
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/_lib.sh"
+WIKI_DIR="$CONTENT_DIR/wiki"
+INBOX_DIR="$CONTENT_DIR/inbox"
+HANDLED_DIR="$CONTENT_DIR/handled"
+
+count_md() {
+    local dir="$1"
+    if [[ -d "$dir" ]]; then
+        find "$dir" -name '*.md' -type f | wc -l | tr -d ' '
+    else
+        echo "0"
+    fi
+}
+
+wiki_count="$(count_md "$WIKI_DIR")"
+inbox_count="$(count_md "$INBOX_DIR")"
+handled_count="$(count_md "$HANDLED_DIR")"
+
+# Last wiki edit: most recent commit that touched wiki/
+last_edit=""
+if [[ -d "$CONTENT_DIR/.git" ]]; then
+    last_edit="$(cd "$CONTENT_DIR" && git log -1 --format='%ai' -- wiki/ 2>/dev/null || echo "never")"
+fi
+if [[ -z "$last_edit" ]]; then
+    last_edit="never"
+fi
+
+# Last observation: most recent commit that touched inbox/
+last_observe=""
+if [[ -d "$CONTENT_DIR/.git" ]]; then
+    last_observe="$(cd "$CONTENT_DIR" && git log -1 --format='%ai' -- inbox/ 2>/dev/null || echo "never")"
+fi
+if [[ -z "$last_observe" ]]; then
+    last_observe="never"
+fi
+
+echo "Wiki: $REPO_ROOT"
+echo "Content: $CONTENT_DIR"
+echo ""
+echo "  Wiki pages:      $wiki_count"
+echo "  Inbox items:     $inbox_count"
+echo "  Handled items:   $handled_count"
+echo ""
+echo "  Last wiki edit:  $last_edit"
+echo "  Last observation: $last_observe"

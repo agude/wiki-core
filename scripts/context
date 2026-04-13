@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# context - Output a brief wiki summary for session injection.
+#
+# Prints a compact summary to stdout that gets injected into
+# Claude's context.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/_lib.sh"
+WIKI_DIR="$CONTENT_DIR/wiki"
+INBOX_DIR="$CONTENT_DIR/inbox"
+
+echo "=== Wiki ($REPO_ROOT) ==="
+echo ""
+
+# Page list
+if [[ -d "$WIKI_DIR" ]] && compgen -G "$WIKI_DIR/*.md" > /dev/null 2>&1; then
+    count=$(find "$WIKI_DIR" -name '*.md' -type f | wc -l | tr -d ' ')
+    echo "Pages ($count):"
+    "$SCRIPT_DIR/toc" --flat | sed 's/^/  /'
+else
+    echo "Pages: (none yet)"
+fi
+
+echo ""
+
+# Pending inbox items
+if [[ -d "$INBOX_DIR" ]] && compgen -G "$INBOX_DIR/*.md" > /dev/null 2>&1; then
+    pending=$(find "$INBOX_DIR" -name '*.md' -type f | wc -l | tr -d ' ')
+    echo "Inbox items: $pending"
+else
+    echo "Inbox items: 0"
+fi
+
+echo ""
+script_list="$(ls "$SCRIPT_DIR" | grep -v '^_' | paste -sd',' - | sed 's/,/, /g')"
+echo "Scripts: $script_list"
+echo "Usage: \$WIKI/scripts/<script> [args]"

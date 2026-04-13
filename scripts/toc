@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+#
+# toc - List wiki pages with titles and tags.
+#
+# Scans wiki/ for markdown files and shows their titles and tags
+# from frontmatter. Optionally shows heading structure.
+#
+# Usage:
+#   toc [--depth N] [--tag TAG] [--flat]
+#
+# Options:
+#   --depth N    Maximum heading level to include (default: 1, titles only)
+#   --tag TAG    Only show pages with this tag
+#   --flat       Omit filename grouping, just list titles
+#
+# Examples:
+#   toc                          # all pages, titles only
+#   toc --depth 2                # titles + H2 sections
+#   toc --tag infrastructure     # pages tagged "infrastructure"
+#   toc --flat                   # just titles, no file paths
+#
+# Output format (default):
+#   [wiki/sync-topology.md]
+#   Sync Topology  [infrastructure, nas, syncthing, backup]
+#     1. Machines
+#     2. Data Flow
+
+set -euo pipefail
+
+DEPTH=1
+TAG_FILTER=""
+FLAT=false
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/_lib.sh"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --depth) need_arg "$1" $#; DEPTH="$2"; shift 2 ;;
+        --tag)   need_arg "$1" $#; TAG_FILTER="$2"; shift 2 ;;
+        --flat)  FLAT=true; shift ;;
+        -h|--help)
+            sed -n '2,/^$/{ s/^# //; p }' "$0"
+            exit 0
+            ;;
+        *) echo "Unknown option: $1" >&2; exit 1 ;;
+    esac
+done
+
+WIKI_DIR="$CONTENT_DIR/wiki"
+
+if [[ ! -d "$WIKI_DIR" ]]; then
+    echo "No wiki directory found." >&2
+    exit 0
+fi
+
+FILES=()
+while IFS= read -r -d '' f; do
+    FILES+=("$f")
+done < <(find "$WIKI_DIR" -name '*.md' -type f -print0 | sort -z)
+
+if [[ ${#FILES[@]} -eq 0 ]]; then
+    echo "No wiki pages."
+    exit 0
+fi
+
+for file in "${FILES[@]}"; do
+    relative="${file#"$CONTENT_DIR"/}"
+
+    # Read tags
+    tags_raw="$(frontmatter_list "tags" "$file" 2>/dev/null || true)"
+    tags_display=""
+    if [[ -n "$tags_raw" ]]; then
+        tags_display="  [$(echo "$tags_raw" | paste -sd',' - | sed 's/,/, /g')]"
+    fi
+
+    # Apply tag filter
+    if [[ -n "$TAG_FILTER" ]]; then
+        if [[ -z "$tags_raw" ]]; then
+            continue
+        fi
+        tag_lower="$(echo "$TAG_FILTER" | tr '[:upper:]' '[:lower:]')"
+        matched=false
+        while IFS= read -r t; do
+            t_lower="$(echo "$t" | tr '[:upper:]' '[:lower:]')"
+            if [[ "$t_lower" == "$tag_lower" ]]; then
+                matched=true
+                break
+            fi
+        done <<< "$tags_raw"
+        [[ "$matched" == false ]] && continue
+    fi
+
+    # Get title from frontmatter or first H1
+    title="$(frontmatter_field "title" "$file" 2>/dev/null || true)"
+    if [[ -z "$title" ]]; then
+        title="$(grep '^# ' "$file" | head -1 | sed 's/^# //' || true)"
+    fi
+    if [[ -z "$title" ]]; then
+        title="$(basename "$file" .md)"
+    fi
+
+    if [[ "$FLAT" == true ]]; then
+        echo "$title$tags_display"
+    else
+        echo ""
+        echo "[$relative]"
+        echo "$title$tags_display"
+    fi
+
+    # Show headings if depth > 1
+    if (( DEPTH > 1 )); then
+        h2_count=0
+        h3_count=0
+
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^(#{1,6})[[:space:]]+(.*) ]]; then
+                hashes="${BASH_REMATCH[1]}"
+                heading="${BASH_REMATCH[2]}"
+                level=${#hashes}
+
+                if (( level > DEPTH )) || (( level == 1 )); then
+                    continue
+                fi
+
+                if (( level == 2 )); then
+                    h2_count=$((h2_count + 1))
+                    h3_count=0
+                    printf "  %d. %s\n" "$h2_count" "$heading"
+                elif (( level == 3 )); then
+                    h3_count=$((h3_count + 1))
+                    printf "     %d.%d. %s\n" "$h2_count" "$h3_count" "$heading"
+                else
+                    indent=$(( (level - 2) * 2 + 5 ))
+                    printf "%*s- %s\n" "$indent" "" "$heading"
+                fi
+            fi
+        done < "$file"
+    fi
+done
