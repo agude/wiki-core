@@ -9,7 +9,8 @@ on a separate content repo.
 wiki-core/              # this repo (infra)
 ├── scripts/            # CLI tools
 ├── tests/              # bats tests
-└── .claude/skills/     # Claude skills
+├── skills/             # Claude skills (symlinked from .claude/skills)
+└── .claude/skills/     # symlink to skills/
 
 content/                # separate git repo (or WIKI_CONTENT_DIR)
 ├── wiki/               # all wiki pages (flat, one .md per page)
@@ -69,7 +70,7 @@ Only writes if `WIKI_OBSERVE=1`. Capture immediately, curate later.
 
 - **Use scripts, not direct file I/O**, for inbox operations.
 - Wiki pages under `wiki/` can be read and edited directly.
-- The curator skill drafts changes; the user reviews and approves.
+- The write-wiki skill drafts changes; the user reviews and approves.
 
 ## Testing
 
