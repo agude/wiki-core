@@ -5,7 +5,7 @@ description: >-
   knowledge surfaces — how systems work, setup procedures, decision rationale,
   troubleshooting discoveries. Calls the wiki observe script at ~/Wiki.
 allowed-tools:
-  - "Bash(${CLAUDE_SKILL_DIR}/../scripts/*)"
+  - "Bash(${CLAUDE_SKILL_DIR}/scripts/*)"
 ---
 
 # Wiki Observe
@@ -17,7 +17,7 @@ for later curation into wiki pages.
 ## Usage
 
 ```bash
-${CLAUDE_SKILL_DIR}/../scripts/observe --title "<one-line summary>" --body "<details>"
+${CLAUDE_SKILL_DIR}/scripts/observe --title "<one-line summary>" --body "<details>"
 ```
 
 ## What to capture
@@ -40,6 +40,6 @@ ${CLAUDE_SKILL_DIR}/../scripts/observe --title "<one-line summary>" --body "<det
 To check if something is already captured:
 
 ```bash
-${CLAUDE_SKILL_DIR}/../scripts/search "<query>"
-${CLAUDE_SKILL_DIR}/../scripts/toc
+${CLAUDE_SKILL_DIR}/scripts/search "<query>"
+${CLAUDE_SKILL_DIR}/scripts/toc
 ```

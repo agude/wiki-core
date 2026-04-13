@@ -29,6 +29,12 @@ teardown() { teardown_content_dir; }
     [[ "$output" == *"Not found"* ]]
 }
 
+@test "archive --help prints usage" {
+    run "$SCRIPTS/archive" --help
+    [[ "$status" -eq 0 ]]
+    [[ "$output" == *"Usage:"* ]]
+}
+
 @test "archive with no files does nothing" {
     run "$SCRIPTS/archive" --all --no-commit
     [[ "$output" == *"No files to archive"* ]]

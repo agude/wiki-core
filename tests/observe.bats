@@ -37,6 +37,12 @@ teardown() { teardown_content_dir; }
     grep -q 'Piped body content' "$file"
 }
 
+@test "observe --help prints usage" {
+    run "$SCRIPTS/observe" --help
+    [[ "$status" -eq 0 ]]
+    [[ "$output" == *"Usage:"* ]]
+}
+
 @test "observe escapes quotes in title" {
     run "$SCRIPTS/observe" --title 'Say "hello"' --body "Body" --no-commit
     [[ "$status" -eq 0 ]]

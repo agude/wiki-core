@@ -30,8 +30,8 @@ set -euo pipefail
 DEPTH=1
 TAG_FILTER=""
 FLAT=false
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 source "$SCRIPT_DIR/_lib.sh"
 
 while [[ $# -gt 0 ]]; do
@@ -40,7 +40,7 @@ while [[ $# -gt 0 ]]; do
         --tag)   need_arg "$1" $#; TAG_FILTER="$2"; shift 2 ;;
         --flat)  FLAT=true; shift ;;
         -h|--help)
-            sed -n '2,/^$/{ s/^# //; p }' "$0"
+            awk 'NR==1{next} /^$/{exit} /^# /{sub(/^# /,""); print}' "$0"
             exit 0
             ;;
         *) echo "Unknown option: $1" >&2; exit 1 ;;

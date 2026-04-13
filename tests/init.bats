@@ -19,6 +19,12 @@ teardown() {
     [[ -d "$INIT_DIR/.git" ]]
 }
 
+@test "init --help prints usage" {
+    run "$BATS_TEST_DIRNAME/../scripts/init" --help
+    [[ "$status" -eq 0 ]]
+    [[ "$output" == *"Usage:"* ]]
+}
+
 @test "init is idempotent" {
     INIT_DIR="$(mktemp -d)"
     rm -rf "$INIT_DIR"

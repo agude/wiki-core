@@ -89,6 +89,12 @@ tags: [cooking]
     [[ "$output" == *"No wiki pages"* ]]
 }
 
+@test "toc --help prints usage" {
+    run "$SCRIPTS/toc" --help
+    [[ "$status" -eq 0 ]]
+    [[ "$output" == *"Usage:"* ]]
+}
+
 @test "toc falls back to filename when no title" {
     create_test_page "no-title.md" "Just some content, no frontmatter."
     run "$SCRIPTS/toc"

@@ -31,6 +31,12 @@ teardown() { teardown_content_dir; }
     [[ "$output" == *"Detailed body here"* ]]
 }
 
+@test "pending --help prints usage" {
+    run "$SCRIPTS/pending" --help
+    [[ "$status" -eq 0 ]]
+    [[ "$output" == *"Usage:"* ]]
+}
+
 @test "pending shows 'No pending items' when empty" {
     run "$SCRIPTS/pending"
     [[ "$output" == "No pending items." ]]

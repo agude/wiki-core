@@ -9,8 +9,8 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 source "$SCRIPT_DIR/_lib.sh"
 
 QUERY="${1:-}"
@@ -33,7 +33,7 @@ fi
 find "${SEARCH_DIRS[@]}" \
     -name '*.md' -type f 2>/dev/null | while read -r file; do
     relpath="${file#"$CONTENT_DIR/"}"
-    grep -n -i -F "$QUERY" "$file" 2>/dev/null | while IFS=: read -r lineno line; do
+    { grep -n -i -F "$QUERY" "$file" 2>/dev/null || true; } | while IFS=: read -r lineno line; do
         section=$(head -n "$lineno" "$file" | grep '^## ' | tail -1 | sed 's/^## //' || true)
         section="${section:-top}"
         trimmed=$(echo "$line" | sed 's/^[[:space:]]*//' | cut -c1-120)

@@ -6,7 +6,7 @@ description: >-
   process pending inbox items into the wiki.
 user-invocable: true
 allowed-tools:
-  - "Bash(${CLAUDE_SKILL_DIR}/../scripts/*)"
+  - "Bash(${CLAUDE_SKILL_DIR}/scripts/*)"
 ---
 
 # Wiki Writer
@@ -28,7 +28,7 @@ following the conventions below.
 
 ## Direct writing
 
-1. Run `${CLAUDE_SKILL_DIR}/../scripts/toc` to see existing pages and tags.
+1. Run `${CLAUDE_SKILL_DIR}/scripts/toc` to see existing pages and tags.
 2. If editing, read the existing page first.
 3. If the user provided source material, read it and extract the durable
    knowledge.
@@ -49,8 +49,8 @@ When the user provides brainstorm docs, notes, or CLAUDE.md sections:
 
 ## Inbox curation
 
-1. Run `${CLAUDE_SKILL_DIR}/../scripts/pending --full` to read all inbox items.
-2. Run `${CLAUDE_SKILL_DIR}/../scripts/toc` to see the current wiki pages and tags.
+1. Run `${CLAUDE_SKILL_DIR}/scripts/pending --full` to read all inbox items.
+2. Run `${CLAUDE_SKILL_DIR}/scripts/toc` to see the current wiki pages and tags.
 3. For each inbox item, decide:
    - **Add to existing page** — fits an existing topic. Add as a new H2
      or extend an existing section. Read the page first.
@@ -59,7 +59,7 @@ When the user provides brainstorm docs, notes, or CLAUDE.md sections:
      one coherent addition.
    - **Discard** (rare) — purely ephemeral or exact duplicate.
 4. Edit wiki pages directly under `content/wiki/`.
-5. Archive each processed item: `${CLAUDE_SKILL_DIR}/../scripts/archive FILENAME`. Archive
+5. Archive each processed item: `${CLAUDE_SKILL_DIR}/scripts/archive FILENAME`. Archive
    discarded items too — never delete inbox items.
 6. Commit all changes as a single batch.
 
@@ -112,7 +112,7 @@ Standard markdown only. No `[[wikilinks]]`.
 - Between wiki pages: `[Sync Topology](sync-topology.md)`
 - External: `[Syncthing docs](https://docs.syncthing.net/)`
 
-Check `${CLAUDE_SKILL_DIR}/../scripts/toc` for existing page filenames when linking.
+Check `${CLAUDE_SKILL_DIR}/scripts/toc` for existing page filenames when linking.
 
 ### Tags
 
@@ -125,7 +125,7 @@ Common dimensions:
 - System: `nas`, `syncthing`, `docker`, `plex`
 - Type: `runbook`, `reference`, `decision-log`
 
-Reuse existing tags where possible — check `${CLAUDE_SKILL_DIR}/../scripts/toc` output.
+Reuse existing tags where possible — check `${CLAUDE_SKILL_DIR}/scripts/toc` output.
 
 ### Granularity
 

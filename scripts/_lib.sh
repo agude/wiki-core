@@ -3,7 +3,7 @@
 # _lib.sh - Shared functions for wiki scripts.
 #
 # Source this after setting REPO_ROOT:
-#   SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+#   SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
 #   REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 #   source "$SCRIPT_DIR/_lib.sh"
 #

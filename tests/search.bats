@@ -48,7 +48,27 @@ PostgreSQL is the database."
 
 Some content."
     run "$SCRIPTS/search" "zzzznonexistent"
+    [[ "$status" -eq 0 ]]
     [[ -z "$output" ]]
+}
+
+@test "search succeeds when only some pages match" {
+    create_test_page "alpha.md" "# Alpha
+
+No match here."
+    create_test_page "beta.md" "# Beta
+
+## Details
+
+The server uses PostgreSQL."
+    create_test_page "gamma.md" "# Gamma
+
+Also no match."
+    run "$SCRIPTS/search" "PostgreSQL"
+    [[ "$status" -eq 0 ]]
+    [[ "$output" == *"wiki/beta.md"* ]]
+    [[ "$output" != *"wiki/alpha.md"* ]]
+    [[ "$output" != *"wiki/gamma.md"* ]]
 }
 
 @test "search handles empty content directories" {
