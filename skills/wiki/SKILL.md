@@ -2,22 +2,24 @@
 name: wiki
 description: Look up, record, and manage wiki content. Use when the user asks to find information, record something, or work with the wiki.
 user-invocable: true
+allowed-tools:
+  - "Bash(${CLAUDE_SKILL_DIR}/../scripts/*)"
 ---
 
 # Wiki
 
-You have access to a personal wiki at `$WIKI`. It contains wiki pages,
-and pending inbox items. All interaction goes through scripts in
-`$WIKI/scripts/`.
+You have access to a personal wiki. It contains wiki pages and pending
+inbox items. All interaction goes through scripts at
+`${CLAUDE_SKILL_DIR}/../scripts/`.
 
 ## Looking things up
 
-1. **Search first.** `scripts/search "<query>"` returns matches across
-   wiki pages and inbox items. Output format:
+1. **Search first.** `${CLAUDE_SKILL_DIR}/../scripts/search "<query>"`
+   returns matches across wiki pages and inbox items. Output format:
    `<file> | <section> | <matched line>`.
 
-2. **Browse with toc.** `scripts/toc` lists all wiki pages with titles
-   and tags.
+2. **Browse with toc.** `${CLAUDE_SKILL_DIR}/../scripts/toc` lists all
+   wiki pages with titles and tags.
    - `toc` — page titles and tags (default)
    - `toc --depth 2` — titles + H2 section names
    - `toc --tag infrastructure` — filter by tag
@@ -33,7 +35,7 @@ why a decision was made, a setup procedure, a troubleshooting discovery —
 capture it immediately:
 
 ```bash
-scripts/observe --title "<one-line summary>" --body "<details>"
+${CLAUDE_SKILL_DIR}/../scripts/observe --title "<one-line summary>" --body "<details>"
 ```
 
 ### Rules
@@ -57,6 +59,8 @@ Don't observe ephemeral state ("the NAS is down right now") or things
 already captured in the wiki.
 
 ## Script reference
+
+All scripts are at `${CLAUDE_SKILL_DIR}/../scripts/<name>`.
 
 | Script | Purpose |
 |---|---|

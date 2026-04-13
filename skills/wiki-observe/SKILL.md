@@ -4,7 +4,8 @@ description: >-
   Capture wiki-worthy knowledge from any session. Use when institutional
   knowledge surfaces — how systems work, setup procedures, decision rationale,
   troubleshooting discoveries. Calls the wiki observe script at ~/Wiki.
-allowed-tools: "Bash(~/Wiki/scripts/:*)"
+allowed-tools:
+  - "Bash(${CLAUDE_SKILL_DIR}/../scripts/*)"
 ---
 
 # Wiki Observe
@@ -16,7 +17,7 @@ for later curation into wiki pages.
 ## Usage
 
 ```bash
-~/Wiki/scripts/observe --title "<one-line summary>" --body "<details>"
+${CLAUDE_SKILL_DIR}/../scripts/observe --title "<one-line summary>" --body "<details>"
 ```
 
 ## What to capture
@@ -39,6 +40,6 @@ for later curation into wiki pages.
 To check if something is already captured:
 
 ```bash
-~/Wiki/scripts/search "<query>"
-~/Wiki/scripts/toc
+${CLAUDE_SKILL_DIR}/../scripts/search "<query>"
+${CLAUDE_SKILL_DIR}/../scripts/toc
 ```
