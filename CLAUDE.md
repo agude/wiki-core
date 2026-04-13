@@ -54,7 +54,6 @@ All paths are `scripts/<name>`.
 | Variable | Purpose |
 |---|---|
 | `WIKI_CONTENT_DIR` | Override content directory (default: `./content`) |
-| `WIKI_OBSERVE` | Set to `1` to enable observation capture |
 
 ## Observations
 
@@ -64,7 +63,7 @@ When wiki-worthy knowledge surfaces during a session, capture it:
 scripts/observe --title "<summary>" --body "<details>"
 ```
 
-Only writes if `WIKI_OBSERVE=1`. Capture immediately, curate later.
+Capture immediately, curate later.
 
 ## Rules
 

@@ -46,13 +46,6 @@ while [[ $# -gt 0 ]]; do
         *) echo "Unknown option: $1" >&2; exit 1 ;;
     esac
 done
-
-# Hard guard: only write if observation is explicitly enabled
-if [[ "${WIKI_OBSERVE:-}" != "1" ]]; then
-    echo "Observation disabled (WIKI_OBSERVE is not 1)" >&2
-    exit 0
-fi
-
 if [[ -z "$TITLE" ]]; then
     echo "Error: --title is required" >&2
     exit 1

@@ -19,9 +19,6 @@ for later curation into wiki pages.
 ~/Wiki/scripts/observe --title "<one-line summary>" --body "<details>"
 ```
 
-Only works when `WIKI_OBSERVE=1` is set (the wiki's SessionStart hook
-sets this automatically).
-
 ## What to capture
 
 - How systems work and why they're configured that way
@@ -32,8 +29,6 @@ sets this automatically).
 
 ## Rules
 
-- **Check `WIKI_OBSERVE=1`** before calling. If it's not set, tell the
-  user what you would have captured so they can note it manually.
 - **One observation per concept.** Three things learned = three calls.
 - **Be specific.** Include exact commands, paths, config values, reasoning.
 - **Don't capture** ephemeral state, things already in the wiki, or

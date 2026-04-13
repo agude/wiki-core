@@ -38,8 +38,6 @@ scripts/observe --title "<one-line summary>" --body "<details>"
 
 ### Rules
 
-- **Only observe if `WIKI_OBSERVE=1`** is set in your environment.
-  Check before calling. Subagents do not get this variable.
 - **Capture immediately.** Do not wait until the task is done.
 - **One observation per concept.** Three things learned = three calls.
 - **Be specific.** "NAS containers restart order matters: Traefik first,
