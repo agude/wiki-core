@@ -20,8 +20,8 @@ content/                # separate git repo (or WIKI_CONTENT_DIR)
 
 ## Content structure
 
-Wiki pages live in `wiki/`. Flat folder, no subfolders. Organization is via
-frontmatter tags, not directory hierarchy.
+Wiki pages live in `wiki/`. Subfolders are allowed for grouping, but tags
+are the primary organization mechanism.
 
 ```yaml
 ---
