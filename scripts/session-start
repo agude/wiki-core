@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# session-start - SessionStart hook for the wiki.
+#
+# Called by Claude Code's SessionStart hook via coat-tree. Does two things:
+# 1. Sets WIKI_OBSERVE=1 via CLAUDE_ENV_FILE (unless pre-suppressed).
+# 2. Outputs the wiki CLAUDE.md to stdout (injected into context).
+#
+# Input: JSON on stdin with session_id, transcript_path, etc.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Read hook input (must consume stdin before any early exit)
+INPUT="$(cat)"
+
+# Respect a pre-existing WIKI_OBSERVE=0 (launch with
+# WIKI_OBSERVE=0 claude to suppress all observation for a session).
+if [[ "${WIKI_OBSERVE:-}" == "0" ]]; then
+    if [[ -n "${CLAUDE_ENV_FILE:-}" ]]; then
+        echo "WIKI_OBSERVE=0" >> "$CLAUDE_ENV_FILE"
+    fi
+    # Still output CLAUDE.md (instructions are useful even without observation)
+    if [[ -f "$REPO_ROOT/CLAUDE.md" ]]; then
+        cat "$REPO_ROOT/CLAUDE.md"
+    fi
+    exit 0
+fi
+
+# Enable observation for this session
+if [[ -n "${CLAUDE_ENV_FILE:-}" ]]; then
+    echo "WIKI_OBSERVE=1" >> "$CLAUDE_ENV_FILE"
+fi
+
+# Output CLAUDE.md to inject into context
+if [[ -f "$REPO_ROOT/CLAUDE.md" ]]; then
+    cat "$REPO_ROOT/CLAUDE.md"
+fi
