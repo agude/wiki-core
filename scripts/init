@@ -80,4 +80,5 @@ else
     echo "  git: initial commit"
 fi
 
-echo "Done."
+# Wire hooks and skills into the system
+"$SCRIPT_DIR/install"
