@@ -115,7 +115,9 @@ installer, making it available from any session.
 
 `scripts/session-start` is a [coat-tree][ct] hook that injects `CLAUDE.md`
 into Claude's context at session start. Install it by symlinking into the
-coat-tree hooks directory (the dotfiles installer handles this).
+coat-tree hooks directory (the dotfiles installer handles this). coat-tree
+is not required. If you prefer, point Claude Code's `SessionStart` hook in
+`settings.json` directly at `scripts/session-start`.
 
 [ct]: https://github.com/agude/coat-tree
 
