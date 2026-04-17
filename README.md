@@ -117,7 +117,7 @@ installer, making it available from any session.
 into Claude's context at session start. Install it by symlinking into the
 coat-tree hooks directory (the dotfiles installer handles this).
 
-[ct]: https://github.com/agude/dotfiles/tree/main/llm/coat-tree
+[ct]: https://github.com/agude/coat-tree
 
 ## Testing
 
